@@ -149,17 +149,28 @@
 }
 
         function updateStatus(isConnected) {
-            const indicator = document.getElementById('connectionIndicator');
-            const status = document.getElementById('connectionStatus');
-            
-            if (isConnected) {
-                indicator.className = 'connection-status connected';
-                status.innerHTML = '<span class="connection-status connected"></span>Connected to PUMPIE FM - Ready to send topics!';
-            } else {
-                indicator.className = 'connection-status disconnected';
-                status.innerHTML = '<span class="connection-status disconnected"></span>Disconnected - Check API URL';
-            }
+    const indicator = document.getElementById('connectionIndicator');
+    const status = document.getElementById('connectionStatus');
+    
+    // Check if elements exist before trying to modify them
+    if (indicator) {
+        if (isConnected) {
+            indicator.className = 'connection-status connected';
+        } else {
+            indicator.className = 'connection-status disconnected';
         }
+    }
+    
+    if (status) {
+        if (isConnected) {
+            status.innerHTML = '<span class="connection-status connected"></span>Connected to PUMPIE FM - Ready to send topics!';
+        } else {
+            status.innerHTML = '<span class="connection-status disconnected"></span>Disconnected - Check API URL';
+        }
+    }
+    
+    console.log('Connection status:', isConnected ? 'Connected' : 'Disconnected');
+}
 
         // Add regular topic
         async function addTopic() {
