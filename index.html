@@ -2482,32 +2482,35 @@ fadeAudioVolume(fromVolume, toVolume, duration) {
         }
 
         showPorkyTalking() {
-            alert('showPorkyTalking called!');
     this.stopPorkyBlinking();
     if (this.studioImg) {
         this.studioImg.style.display = 'none';
     }
     if (this.porkyGif) {
-        this.porkyGif.src = this.porkyGif.src;
+        this.porkyGif.src = this.porkyGif.src; // Force GIF restart
         this.porkyGif.style.display = 'block';
     }
     if (this.porkyBlink) {
         this.porkyBlink.style.display = 'none';
     }
+    if (this.perkyReporter) {
+        this.perkyReporter.classList.remove('visible');
+    }
+    console.log('Porky GIF should be talking now');
 }
         showStudio() {
-            if (this.porkyGif) {
-                this.porkyGif.classList.remove('visible');
-            }
-            if (this.porkyBlink) {
-                this.porkyBlink.classList.remove('visible');
-            }
-            if (this.studioImg) {
-                this.studioImg.classList.add('visible');
-            }
-            this.startPorkyBlinking();
-            console.log('🎵 Showing studio image - Porky will blink randomly');
-        }
+    if (this.porkyGif) {
+        this.porkyGif.style.display = 'none';
+    }
+    if (this.porkyBlink) {
+        this.porkyBlink.style.display = 'none';
+    }
+    if (this.studioImg) {
+        this.studioImg.style.display = 'block';
+    }
+    this.startPorkyBlinking();
+    console.log('Showing studio image - Porky will blink randomly');
+}
 
         updateStatus(message) {
             this.statusDisplay.textContent = message;
