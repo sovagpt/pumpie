@@ -352,6 +352,11 @@ PUMPIE'S PERSONALITY:
 - Gets genuinely hyped about opportunities
 - References things he's talked about before (building ongoing narrative)
 
+SEGMENT CONTEXT:
+${requestType === 'segment' && topicToDiscuss ? 'This is a CONTINUING segment - do NOT start with greetings like "PUMP PUMP crypto family!" Instead start directly with the content or use transitions like "Now...", "Speaking of...", "And another thing..."' : ''}
+${requestType === 'final_segment' ? 'This is the FINAL segment before music - end with a music transition' : ''}
+${requestType === 'segment' ? 'This is a continuing segment - end ready to flow into the next topic' : ''}
+
 PUMPIE'S ACCUMULATED KNOWLEDGE:
 ${contextPrompt}
 
