@@ -1878,28 +1878,28 @@ Loading music library from GitHub...
         console.log(`🎵 Playing ElevenLabs audio for ${voiceType}`);
         
         // NOW show the talking animation right before playing audio
-        if (voiceType === 'porky') {
+        if (voiceType === 'pumpie' || voiceType === 'porky') {
             this.showPorkyTalking();
         }
         
         await this.playAudio(audioUrl);
         
         // Go back to studio when audio ends
-        if (voiceType === 'porky') {
+        if (voiceType === 'pumpie' || voiceType === 'porky') {
             this.showStudio();
         }
     } else {
         console.log(`🎤 Using browser TTS fallback for ${voiceType}`);
         
         // For browser TTS, show animation right before speaking
-        if (voiceType === 'porky') {
+        if (voiceType === 'pumpie' || voiceType === 'porky') {
             this.showPorkyTalking();
         }
         
         await this.textToSpeech(text, voiceType);
         
         // Go back to studio when speech ends
-        if (voiceType === 'porky') {
+        if (voiceType === 'pumpie' || voiceType === 'porky') {
             this.showStudio();
         }
     }
