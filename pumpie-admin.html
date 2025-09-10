@@ -128,19 +128,25 @@
 
         // Test connection to radio
         async function testConnection() {
-            try {
-                const response = await fetch(`${apiUrl}/chat`);
-                connected = response.ok;
-                updateStatus(connected);
-                if (connected) {
-                    console.log('Connected to Pumpie FM!');
-                }
-            } catch (error) {
-                console.error('Connection failed:', error);
-                connected = false;
-                updateStatus(false);
-            }
+    try {
+        console.log('Testing connection to:', `${apiUrl}/enhanced-chat`);
+        const response = await fetch(`${apiUrl}/enhanced-chat`);
+        console.log('Response status:', response.status);
+        console.log('Response ok:', response.ok);
+        
+        if (response.ok) {
+            const data = await response.json();
+            console.log('Response data:', data);
         }
+        
+        connected = response.ok;
+        updateStatus(connected);
+    } catch (error) {
+        console.error('Connection error:', error);
+        connected = false;
+        updateStatus(false);
+    }
+}
 
         function updateStatus(isConnected) {
             const indicator = document.getElementById('connectionIndicator');
