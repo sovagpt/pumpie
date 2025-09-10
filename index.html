@@ -2482,28 +2482,16 @@ fadeAudioVolume(fromVolume, toVolume, duration) {
         }
 
         showPorkyTalking() {
-    console.log('🎤 showPorkyTalking() called!');
-    console.log('Elements found:', {
-        studioImg: !!this.studioImg,
-        porkyGif: !!this.porkyGif,
-        porkyBlink: !!this.porkyBlink
-    });
-    
     this.stopPorkyBlinking();
     if (this.studioImg) {
-        this.studioImg.classList.remove('visible');
-        console.log('Studio image hidden');
+        this.studioImg.style.display = 'none';
     }
     if (this.porkyGif) {
         this.porkyGif.src = this.porkyGif.src;
-        this.porkyGif.classList.add('visible');
-        console.log('Porky GIF should be visible and animating');
+        this.porkyGif.style.display = 'block';
     }
     if (this.porkyBlink) {
-        this.porkyBlink.classList.remove('visible');
-    }
-    if (this.perkyReporter) {
-        this.perkyReporter.classList.remove('visible');
+        this.porkyBlink.style.display = 'none';
     }
 }
         showStudio() {
