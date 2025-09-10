@@ -2400,7 +2400,8 @@ fadeAudioVolume(fromVolume, toVolume, duration) {
                         topic.type !== 'perky_report' && topic.reporter !== 'perky'
                     );
                     
-                    const radioScript = await this.generateRadioContent(cryptoData, nextTopic);
+                    const requestType = this.segmentCount === this.maxSegmentsBeforeMusic - 1 ? 'final_segment' : 'segment';
+const radioScript = await this.generateRadioContent(cryptoData, nextTopic, requestType);
                     
                     if (nextTopic) {
                         await this.removeTopic(nextTopic.id);
