@@ -109,6 +109,24 @@
             <button class="btn perky" onclick="addPerkyReport()">Perky Report</button>
         </div>
 
+        <div class="panel viewer-comments">
+    <h3>💬 Viewer Comments</h3>
+    <textarea id="viewerComment" class="topic-input" placeholder="Paste viewer comment here for Pumpie to respond to..."></textarea>
+    
+    <div class="input-group">
+        <input type="text" id="viewerUsername" placeholder="Username (optional)" style="flex: 1;">
+        <select id="commentPlatform">
+            <option value="chat">Live Chat</option>
+            <option value="twitter">Twitter</option>
+            <option value="telegram">Telegram</option>
+            <option value="discord">Discord</option>
+        </select>
+    </div>
+
+    <button class="btn" onclick="addViewerComment()">💭 Send Comment</button>
+    <button class="btn" onclick="addViewerQuestion()">❓ Send as Question</button>
+</div>
+
         <div class="panel">
             <h3>Breaking News</h3>
             <textarea id="breakingNews" class="topic-input" placeholder="URGENT breaking news..."></textarea>
@@ -215,6 +233,42 @@
             await sendTopic(content, 'breaking_news', 'urgent');
             document.getElementById('breakingNews').value = '';
         }
+
+        async function addViewerComment() {
+    const comment = document.getElementById('viewerComment').value.trim();
+    const username = document.getElementById('viewerUsername').value || 'Anonymous';
+    const platform = document.getElementById('commentPlatform').value;
+    
+    if (!comment) {
+        alert('Please enter a comment');
+        return;
+    }
+    
+    const topicContent = `Viewer ${username} from ${platform} says: "${comment}" - Please respond to this comment naturally.`;
+    
+    await sendTopic(topicContent, 'viewer_interaction', 'normal');
+    
+    document.getElementById('viewerComment').value = '';
+    document.getElementById('viewerUsername').value = '';
+}
+
+async function addViewerQuestion() {
+    const comment = document.getElementById('viewerComment').value.trim();
+    const username = document.getElementById('viewerUsername').value || 'Anonymous';
+    const platform = document.getElementById('commentPlatform').value;
+    
+    if (!comment) {
+        alert('Please enter a question');
+        return;
+    }
+    
+    const topicContent = `Viewer ${username} from ${platform} asks: "${comment}" - Please answer this question directly.`;
+    
+    await sendTopic(topicContent, 'viewer_question', 'normal');
+    
+    document.getElementById('viewerComment').value = '';
+    document.getElementById('viewerUsername').value = '';
+}
 
         // Core function to send topics to radio
         async function sendTopic(content, type = 'general', priority = 'normal', reporter = 'pumpie') {
