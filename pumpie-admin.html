@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pumpie FM Live Admin</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3);
+        }
+        .header { text-align: center; margin-bottom: 30px; }
+        .logo {
+            font-size: 2.5em;
+            font-weight: bold;
+            background: linear-gradient(45deg, #ff6b6b, #4ecdc4, #45b7d1);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 10px;
+        }
+        .status {
+            background: rgba(0, 0, 0, 0.7);
+            color: #00ff41;
+            padding: 15px;
+            border-radius: 10px;
+            margin: 20px 0;
+            font-family: 'Courier New', monospace;
+            text-align: center;
+            border: 2px solid #00ff41;
+        }
+        .panel {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            padding: 20px;
+            margin: 20px 0;
+            border: 2px solid rgba(255, 255, 255, 0.2);
+        }
+        .panel h3 { color: #fff; margin-bottom: 15px; }
+        .topic-input {
+            width: 100%;
+            min-height: 80px;
+            padding: 10px;
+            border: none;
+            border-radius: 8px;
+            background: rgba(255, 255, 255, 0.9);
+            resize: vertical;
+            margin-bottom: 10px;
+        }
+        .btn {
+            background: linear-gradient(45deg, #ff6b6b, #4ecdc4);
+            border: none;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-weight: bold;
+            margin: 5px;
+            transition: transform 0.3s ease;
+        }
+        .btn:hover { transform: translateY(-2px); }
+        .btn.urgent { background: linear-gradient(45deg, #ff3742, #ff4757); }
+        .btn.perky { background: linear-gradient(45deg, #ff1493, #ff69b4); }
+        .connection-status {
+            display: inline-block;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            margin-right: 8px;
+        }
+        .connection-status.connected {
+            background: #00ff41;
+            box-shadow: 0 0 10px #00ff41;
+        }
+        .connection-status.disconnected {
+            background: #ff4757;
+            box-shadow: 0 0 10px #ff4757;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="logo">PUMPIE FM Live Admin</div>
+            <p style="color: #fff; opacity: 0.9;">Pump.Fun Radio Stream Control</p>
+        </div>
+
+        <div class="status" id="connectionStatus">
+            <span class="connection-status disconnected" id="connectionIndicator"></span>
+            Connecting to PUMPIE FM...
+        </div>
+
+        <div class="panel">
+            <h3>Quick Topics</h3>
+            <textarea id="customTopic" class="topic-input" placeholder="Enter topic for Pumpie to discuss..."></textarea>
+            <button class="btn" onclick="addTopic()">Add Topic</button>
+            <button class="btn urgent" onclick="addUrgentTopic()">Add Urgent</button>
+            <button class="btn perky" onclick="addPerkyReport()">Perky Report</button>
+        </div>
+
+        <div class="panel">
+            <h3>Breaking News</h3>
+            <textarea id="breakingNews" class="topic-input" placeholder="URGENT breaking news..."></textarea>
+            <button class="btn urgent" onclick="sendBreaking()">SEND BREAKING NEWS</button>
+        </div>
+
+        <div class="panel">
+            <h3>Controls</h3>
+            <button class="btn" onclick="testConnection()">Test Connection</button>
+            <button class="btn" onclick="refreshData()">Refresh Data</button>
+        </div>
+    </div>
+
+    <script>
+        let apiUrl = 'https://oiunk.vercel.app/api'; // Change this to your radio site URL
+        let connected = false;
+
+        // Test connection to radio
+        async function testConnection() {
+            try {
+                const response = await fetch(`${apiUrl}/chat`);
+                connected = response.ok;
+                updateStatus(connected);
+                if (connected) {
+                    console.log('Connected to Pumpie FM!');
+                }
+            } catch (error) {
+                console.error('Connection failed:', error);
+                connected = false;
+                updateStatus(false);
+            }
+        }
+
+        function updateStatus(isConnected) {
+            const indicator = document.getElementById('connectionIndicator');
+            const status = document.getElementById('connectionStatus');
+            
+            if (isConnected) {
+                indicator.className = 'connection-status connected';
+                status.innerHTML = '<span class="connection-status connected"></span>Connected to PUMPIE FM - Ready to send topics!';
+            } else {
+                indicator.className = 'connection-status disconnected';
+                status.innerHTML = '<span class="connection-status disconnected"></span>Disconnected - Check API URL';
+            }
+        }
+
+        // Add regular topic
+        async function addTopic() {
+            const content = document.getElementById('customTopic').value.trim();
+            if (!content) {
+                alert('Please enter topic content');
+                return;
+            }
+            await sendTopic(content, 'general', 'normal');
+            document.getElementById('customTopic').value = '';
+        }
+
+        // Add urgent topic
+        async function addUrgentTopic() {
+            const content = document.getElementById('customTopic').value.trim();
+            if (!content) {
+                alert('Please enter topic content');
+                return;
+            }
+            await sendTopic(content, 'breaking_news', 'urgent');
+            document.getElementById('customTopic').value = '';
+        }
+
+        // Add Perky report
+        async function addPerkyReport() {
+            const content = document.getElementById('customTopic').value.trim();
+            if (!content) {
+                alert('Please enter report content');
+                return;
+            }
+            await sendTopic(content, 'perky_report', 'normal', 'perky');
+            document.getElementById('customTopic').value = '';
+        }
+
+        // Send breaking news
+        async function sendBreaking() {
+            const content = document.getElementById('breakingNews').value.trim();
+            if (!content) {
+                alert('Please enter breaking news');
+                return;
+            }
+            await sendTopic(content, 'breaking_news', 'urgent');
+            document.getElementById('breakingNews').value = '';
+        }
+
+        // Core function to send topics to radio
+        async function sendTopic(content, type = 'general', priority = 'normal', reporter = 'pumpie') {
+            try {
+                const response = await fetch(`${apiUrl}/enhanced-chat`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        action: 'add_topic',
+                        topic: {
+                            content,
+                            type,
+                            priority,
+                            reporter,
+                            timestamp: Date.now(),
+                            tags: []
+                        }
+                    })
+                });
+
+                if (response.ok) {
+                    updateStatus(true);
+                    console.log(`Topic sent: ${content.substring(0, 50)}...`);
+                } else {
+                    throw new Error('Failed to send topic');
+                }
+            } catch (error) {
+                console.error('Send topic failed:', error);
+                updateStatus(false);
+                alert('Failed to send topic - check connection');
+            }
+        }
+
+        async function refreshData() {
+            await testConnection();
+        }
+
+        // Initialize on page load
+        window.addEventListener('load', () => {
+            testConnection();
+            // Test connection every 30 seconds
+            setInterval(testConnection, 30000);
+        });
+    </script>
+</body>
+</html>
