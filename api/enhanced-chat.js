@@ -366,7 +366,7 @@ CREATE A ${requestType.toUpperCase()} THAT:
 2. References previous knowledge/conversations when relevant
 3. Uses natural pump-themed slang
 4. Shows growing expertise from accumulated knowledge
-5. Ends with smooth transition to music
+5. ${requestType === 'final_segment' ? 'Ends with smooth transition to music' : 'Ends with natural pause, ready to continue with more topics'}
 6. Sounds like ongoing conversation, not isolated segments
 
 PUMPIE'S NATURAL SPEAKING STYLE:
