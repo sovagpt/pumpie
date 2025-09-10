@@ -21,7 +21,7 @@ export default async function handler(req, res) {
     }
 
     // Simple voice mapping - if Perky's voice fails, just use Porky's
-    let voiceId = '4YYIPFl9wE5c4L2eu2Gb'; // Default to Porky's voice
+    let voiceId = 'QTGiyJvep6bcx4WD1qAq'; // Default to Porky's voice
     
     if (voice === 'perky' || voice === '19STyYD15bswVz51nqLf') {
       voiceId = '19STyYD15bswVz51nqLf'; // Try Perky's voice
