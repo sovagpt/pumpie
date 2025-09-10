@@ -2482,14 +2482,22 @@ fadeAudioVolume(fromVolume, toVolume, duration) {
         }
 
         showPorkyTalking() {
+    console.log('🎤 showPorkyTalking() called!');
+    console.log('Elements found:', {
+        studioImg: !!this.studioImg,
+        porkyGif: !!this.porkyGif,
+        porkyBlink: !!this.porkyBlink
+    });
+    
     this.stopPorkyBlinking();
     if (this.studioImg) {
         this.studioImg.classList.remove('visible');
+        console.log('Studio image hidden');
     }
     if (this.porkyGif) {
-        // Force GIF to restart animation from beginning
         this.porkyGif.src = this.porkyGif.src;
         this.porkyGif.classList.add('visible');
+        console.log('Porky GIF should be visible and animating');
     }
     if (this.porkyBlink) {
         this.porkyBlink.classList.remove('visible');
@@ -2497,7 +2505,6 @@ fadeAudioVolume(fromVolume, toVolume, duration) {
     if (this.perkyReporter) {
         this.perkyReporter.classList.remove('visible');
     }
-    console.log('Pumpie showing talking GIF - should be animating!');
 }
         showStudio() {
             if (this.porkyGif) {
